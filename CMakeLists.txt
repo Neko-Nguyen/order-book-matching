@@ -14,11 +14,19 @@ option(OBM_BUILD_TESTS "Build unit tests" ON)
 option(OBM_SANITIZE "Build with AddressSanitizer and UndefinedBehaviorSanitizer" OFF)
 
 add_library(obm_warnings INTERFACE)
-target_compile_options(obm_warnings INTERFACE -Wall -Wextra -Wpedantic -Wconversion -Wshadow)
+if(MSVC)
+  target_compile_options(obm_warnings INTERFACE /W4 /permissive-)
+else()
+  target_compile_options(obm_warnings INTERFACE -Wall -Wextra -Wpedantic -Wconversion -Wshadow)
+endif()
 
 if(OBM_SANITIZE)
-  add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer)
-  add_link_options(-fsanitize=address,undefined)
+  if(MSVC)
+    add_compile_options(/fsanitize=address)
+  else()
+    add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer)
+    add_link_options(-fsanitize=address,undefined)
+  endif()
 endif()
 
 add_library(obm src/order_book.cpp)
@@ -34,6 +42,8 @@ if(OBM_BUILD_TESTS)
       URL https://github.com/google/googletest/archive/refs/tags/v1.15.2.tar.gz
       DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )
+    # Match the project's runtime library on MSVC.
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(googletest)
   endif()
 
