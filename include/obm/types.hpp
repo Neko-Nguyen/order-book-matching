@@ -16,6 +16,8 @@ struct Trade {
   OrderId seller;
   Quantity quantity;
   Price price;
+
+  bool operator==(const Trade&) const = default;
 };
 
 }  // namespace obm
