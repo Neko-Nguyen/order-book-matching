@@ -1,10 +1,10 @@
+#include "obm/order_book.hpp"
+
 #include <gtest/gtest.h>
 
 #include <ostream>
 #include <stdexcept>
 #include <vector>
-
-#include "obm/order_book.hpp"
 
 namespace obm {
 

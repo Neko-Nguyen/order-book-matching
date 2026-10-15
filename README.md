@@ -19,6 +19,13 @@ ctest --test-dir build --output-on-failure
 
 Add `-DOBM_SANITIZE=ON` for an AddressSanitizer and UBSan build.
 
+## Formatting
+
+Code style is defined in `.clang-format` (Google style, 100 columns) and checked in CI.
+
+- **VS Code:** files are formatted on save. Install the recommended C/C++ extension when prompted.
+- **Command line:** `cmake --build build --target format` formats everything; `--target format-check` only checks.
+
 ## Layout
 
 | Path | Contents |

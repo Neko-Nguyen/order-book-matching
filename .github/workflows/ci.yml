@@ -6,6 +6,18 @@ on:
   pull_request:
 
 jobs:
+  format:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install clang-format
+        run: sudo apt-get update && sudo apt-get install -y clang-format-18
+      - name: Check formatting
+        run: |
+          clang-format-18 --version
+          find include src tests bench -name '*.hpp' -o -name '*.cpp' \
+            | xargs -r clang-format-18 --dry-run --Werror
+
   build:
     runs-on: ubuntu-24.04
     strategy:
