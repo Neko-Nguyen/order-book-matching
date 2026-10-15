@@ -1,6 +1,6 @@
-#include <gtest/gtest.h>
-
 #include "obm/order_book.hpp"
+
+#include <gtest/gtest.h>
 
 TEST(OrderBook, StartsEmpty) {
   obm::OrderBook book;

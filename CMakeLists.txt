@@ -53,3 +53,25 @@ if(OBM_BUILD_TESTS)
   include(GoogleTest)
   gtest_discover_tests(obm_tests)
 endif()
+
+# `cmake --build build --target format` rewrites sources in place;
+# `--target format-check` fails if any file needs formatting (CI runs this).
+find_program(CLANG_FORMAT_EXE NAMES clang-format)
+if(CLANG_FORMAT_EXE)
+  file(GLOB_RECURSE OBM_FORMAT_SOURCES CONFIGURE_DEPENDS
+    ${PROJECT_SOURCE_DIR}/include/*.hpp
+    ${PROJECT_SOURCE_DIR}/src/*.cpp
+    ${PROJECT_SOURCE_DIR}/tests/*.cpp
+    ${PROJECT_SOURCE_DIR}/bench/*.cpp
+  )
+  add_custom_target(format
+    COMMAND ${CLANG_FORMAT_EXE} -i ${OBM_FORMAT_SOURCES}
+    COMMENT "Formatting sources with clang-format"
+    VERBATIM
+  )
+  add_custom_target(format-check
+    COMMAND ${CLANG_FORMAT_EXE} --dry-run --Werror ${OBM_FORMAT_SOURCES}
+    COMMENT "Checking formatting with clang-format"
+    VERBATIM
+  )
+endif()
